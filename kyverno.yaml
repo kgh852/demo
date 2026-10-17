@@ -1,0 +1,20 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-ecr-signed-images
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: require-signed-ecr-images
+      match:
+        resources:
+          kinds:
+            - Pod
+            - Deployment
+      verifyImages:
+        - image: "*"
+          key: |
+            -----BEGIN PUBLIC KEY-----
+            cosign.pub 내용 복사
+            -----END PUBLIC KEY-----
